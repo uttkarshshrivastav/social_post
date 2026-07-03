@@ -4,7 +4,7 @@ from pathlib import Path
 
 from fastapi import HTTPException, UploadFile
 
-from Backend.app.drafting.context_state.request_state import ImageState, PDFState
+# from Backend.app.drafting.context_state.states import ImageState, DocumentState
 
 
 
@@ -12,7 +12,7 @@ IMAGE_MAX_SIZE = 5 * 1024 * 1024  # 5 MB
 PDF_MAX_SIZE = 20 * 1024 * 1024   # 20 MB
 
 IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg"}
-PDF_EXTENSIONS = {".pdf"}
+PDF_EXTENSIONS = {".pdf",".md"}
 
 IMAGE_MIME_TYPES = {
     "image/png",
@@ -21,6 +21,7 @@ IMAGE_MIME_TYPES = {
 
 PDF_MIME_TYPES = {
     "application/pdf",
+    "text/markdown",
 }
 
 MAGIC_BYTES = {
@@ -121,11 +122,11 @@ def validate_filename(
 # COMPOSITE VALIDATORS
 # ==========================================================
 
-async def validate_image(
-    image: ImageState,
+async def validate_image_file(
+    images: UploadFile,
 ) -> None:
 
-    file = image.upload_file
+    file = images
 
     validate_filename(file.filename)
 
@@ -148,10 +149,10 @@ async def validate_image(
 
 
 async def validate_pdf(
-    pdf: PDFState,
+    pdf: UploadFile,
 ) -> None:
 
-    file = pdf.upload_file
+    file = pdf
 
     validate_filename(file.filename)
 
